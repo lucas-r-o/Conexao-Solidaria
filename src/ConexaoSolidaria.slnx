@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Docker/">
+    <File Path="Docker/Dockerfile" />
+  </Folder>
+  <Project Path="ApplicationServices/ApplicationServices.csproj" Id="331922da-27e1-490f-b315-0b242bba28f7" />
+  <Project Path="ConexaoSolidaria.API/ConexaoSolidaria.API.csproj" />
+  <Project Path="ConexaoSolidaria.Tests/ConexaoSolidaria.Tests.csproj" />
+  <Project Path="Infrastructure/Infrastructure.csproj" Id="4dc80813-6954-457a-9bcb-acef7a4cad6c" />
+  <Project Path="Models/Models.csproj" Id="55c87199-872b-4d29-b917-473526d44320" />
+</Solution>

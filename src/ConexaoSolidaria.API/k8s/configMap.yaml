@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: conexao-solidaria-config
+  namespace: apps
+data:
+  Bus__Host: "rabbit-service"
+  Bus__Port: "5672"
+  Bus__User: "guest"

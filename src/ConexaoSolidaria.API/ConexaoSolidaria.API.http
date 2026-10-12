@@ -1,0 +1,89 @@
+@ConexaoSolidaria.API_HostAddress = http://localhost:5155
+
+### 1. Criar a ONG (Apenas GestorONG pode criar Campanhas)
+POST {{ConexaoSolidaria.API_HostAddress}}/doadores
+Content-Type: application/json
+
+{
+  "nome": "ONG Esperança",
+  "email": "ong@esperanca.com",
+  "cpf": "98765432100",
+  "senhaHash": "senha123",
+  "role": 1
+}
+
+### 2. Criar um Doador (Público - Forçado a Doador na API)
+POST {{ConexaoSolidaria.API_HostAddress}}/doadores
+Content-Type: application/json
+
+{
+  "nome": "Doador Amigo",
+  "email": "doador@amigo.com",
+  "cpf": "11144477735",
+  "senhaHash": "senhaDoador123",
+  "role": 0
+}
+
+### 3. Fazer Login com a ONG
+# Clique em Send Request e copie o Token gerado para usar abaixo
+POST {{ConexaoSolidaria.API_HostAddress}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "ong@esperanca.com",
+  "senha": "senha123"
+}
+
+### 4. Fazer Login com o Doador
+# Clique em Send Request e copie o Token gerado para usar no endpoint de Doações
+POST {{ConexaoSolidaria.API_HostAddress}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "doador@amigo.com",
+  "senha": "senhaDoador123"
+}
+
+### 5. Configurar Token da ONG
+@TokenONG = COLE_O_TOKEN_ONG_AQUI
+
+### 6. Criar Campanha (Apenas GestorONG)
+# Use o TokenONG configurado acima
+POST {{ConexaoSolidaria.API_HostAddress}}/campanhas
+Content-Type: application/json
+Authorization: Bearer {{TokenONG}}
+
+{
+  "titulo": "Campanha de Inverno 2026",
+  "descricao": "Arrecadação de agasalhos e cobertores para o inverno.",
+  "metaFinanceira": 5000.00
+}
+
+### 7. Atualizar Campanha (Apenas GestorONG)
+# Substitua o ID abaixo pelo Guid retornado ao criar a Campanha
+@CampanhaId = ID_DA_CAMPANHA_CRIADA_AQUI
+
+PUT {{ConexaoSolidaria.API_HostAddress}}/campanhas/{{CampanhaId}}
+Content-Type: application/json
+Authorization: Bearer {{TokenONG}}
+
+{
+  "titulo": "Campanha de Inverno 2026 - Atualizada",
+  "descricao": "Arrecadação de agasalhos, cobertores e meias.",
+  "metaFinanceira": 7500.00,
+  "status": 0
+}
+
+### 8. Configurar Token do Doador
+@TokenDoador = COLE_O_TOKEN_DOADOR_AQUI
+
+### 9. Simular Doação via RabbitMQ (Apenas Doador Logado)
+# O DoadorId é extraído automaticamente do JWT Token do Doador
+POST {{ConexaoSolidaria.API_HostAddress}}/doacoes
+Content-Type: application/json
+Authorization: Bearer {{TokenDoador}}
+
+{
+  "campanhaId": "{{CampanhaId}}",
+  "valor": 250.00
+}

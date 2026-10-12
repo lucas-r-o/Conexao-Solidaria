@@ -1,0 +1,99 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\prolu\\OneDrive\\Documentos\\Hackathon\\ConexaoSolidaria\\src\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{55C87199-872B-4D29-B917-473526D44320}|Models\\Models.csproj|c:\\users\\prolu\\onedrive\\documentos\\hackathon\\conexaosolidaria\\src\\models\\dtos\\doacaodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{55C87199-872B-4D29-B917-473526D44320}|Models\\Models.csproj|solutionrelative:models\\dtos\\doacaodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{331922DA-27E1-490F-B315-0B242BBA28F7}|ApplicationServices\\ApplicationServices.csproj|c:\\users\\prolu\\onedrive\\documentos\\hackathon\\conexaosolidaria\\src\\applicationservices\\services\\usuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{331922DA-27E1-490F-B315-0B242BBA28F7}|ApplicationServices\\ApplicationServices.csproj|solutionrelative:applicationservices\\services\\usuarioservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C1E2FC57-E910-CAAE-0044-1C056CCA95BC}|ConexaoSolidaria.API\\ConexaoSolidaria.API.csproj|c:\\users\\prolu\\onedrive\\documentos\\hackathon\\conexaosolidaria\\src\\conexaosolidaria.api\\controllers\\doacoescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C1E2FC57-E910-CAAE-0044-1C056CCA95BC}|ConexaoSolidaria.API\\ConexaoSolidaria.API.csproj|solutionrelative:conexaosolidaria.api\\controllers\\doacoescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{331922DA-27E1-490F-B315-0B242BBA28F7}|ApplicationServices\\ApplicationServices.csproj|c:\\users\\prolu\\onedrive\\documentos\\hackathon\\conexaosolidaria\\src\\applicationservices\\services\\campanhaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{331922DA-27E1-490F-B315-0B242BBA28F7}|ApplicationServices\\ApplicationServices.csproj|solutionrelative:applicationservices\\services\\campanhaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DoacaoDto.cs",
+              "DocumentMoniker": "C:\\Users\\prolu\\OneDrive\\Documentos\\Hackathon\\ConexaoSolidaria\\src\\Models\\Dtos\\DoacaoDto.cs",
+              "RelativeDocumentMoniker": "Models\\Dtos\\DoacaoDto.cs",
+              "ToolTip": "C:\\Users\\prolu\\OneDrive\\Documentos\\Hackathon\\ConexaoSolidaria\\src\\Models\\Dtos\\DoacaoDto.cs",
+              "RelativeToolTip": "Models\\Dtos\\DoacaoDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-08T21:22:51.346Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DoacoesController.cs",
+              "DocumentMoniker": "C:\\Users\\prolu\\OneDrive\\Documentos\\Hackathon\\ConexaoSolidaria\\src\\ConexaoSolidaria.API\\Controllers\\DoacoesController.cs",
+              "RelativeDocumentMoniker": "ConexaoSolidaria.API\\Controllers\\DoacoesController.cs",
+              "ToolTip": "C:\\Users\\prolu\\OneDrive\\Documentos\\Hackathon\\ConexaoSolidaria\\src\\ConexaoSolidaria.API\\Controllers\\DoacoesController.cs",
+              "RelativeToolTip": "ConexaoSolidaria.API\\Controllers\\DoacoesController.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABIAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-07T22:29:53.783Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UsuarioService.cs",
+              "DocumentMoniker": "C:\\Users\\prolu\\OneDrive\\Documentos\\Hackathon\\ConexaoSolidaria\\src\\ApplicationServices\\Services\\UsuarioService.cs",
+              "RelativeDocumentMoniker": "ApplicationServices\\Services\\UsuarioService.cs",
+              "ToolTip": "C:\\Users\\prolu\\OneDrive\\Documentos\\Hackathon\\ConexaoSolidaria\\src\\ApplicationServices\\Services\\UsuarioService.cs",
+              "RelativeToolTip": "ApplicationServices\\Services\\UsuarioService.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAUwCAAAABoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-07T22:34:46.939Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CampanhaService.cs",
+              "DocumentMoniker": "C:\\Users\\prolu\\OneDrive\\Documentos\\Hackathon\\ConexaoSolidaria\\src\\ApplicationServices\\Services\\CampanhaService.cs",
+              "RelativeDocumentMoniker": "ApplicationServices\\Services\\CampanhaService.cs",
+              "ToolTip": "C:\\Users\\prolu\\OneDrive\\Documentos\\Hackathon\\ConexaoSolidaria\\src\\ApplicationServices\\Services\\CampanhaService.cs",
+              "RelativeToolTip": "ApplicationServices\\Services\\CampanhaService.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAqwBgAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-06T22:37:33.247Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

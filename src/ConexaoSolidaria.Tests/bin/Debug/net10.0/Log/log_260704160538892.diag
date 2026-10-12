@@ -1,0 +1,18 @@
+2026-07-04T16:05:38.9251464+00:00 Microsoft.Testing.Platform.Builder.TestApplication INFORMATION Version: 1.9.1+cb5afc3bb9bb01ebd75b57f89e8358b914ee2a49
+2026-07-04T16:05:38.9554269+00:00 Microsoft.Testing.Platform.Builder.TestApplication INFORMATION Logging mode: asynchronous
+2026-07-04T16:05:38.9601997+00:00 Microsoft.Testing.Platform.Builder.TestApplication INFORMATION Logging level: Information
+2026-07-04T16:05:38.9602035+00:00 Microsoft.Testing.Platform.Builder.TestApplication INFORMATION CreateBuilderAsync entry time: 16:05:38.790
+2026-07-04T16:05:38.9614779+00:00 Microsoft.Testing.Platform.Builder.TestApplication INFORMATION PID: 7984
+2026-07-04T16:05:38.9616648+00:00 Microsoft.Testing.Platform.Builder.TestApplication INFORMATION Runtime information: win-x64 - .NET 10.0.9
+2026-07-04T16:05:38.9616679+00:00 Microsoft.Testing.Platform.Builder.TestApplication INFORMATION Runtime location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\10.0.9\System.Private.CoreLib.dll
+2026-07-04T16:05:38.9619950+00:00 Microsoft.Testing.Platform.Builder.TestApplication INFORMATION IsDynamicCodeSupported: True
+2026-07-04T16:05:38.9621505+00:00 Microsoft.Testing.Platform.Builder.TestApplication INFORMATION Test module: C:\Users\prolu\OneDrive\Documentos\Hackathon\ConexaoSolidaria\Conexao_Solidaria_REPO\ConexaoSolidaria.Tests\bin\Debug\net10.0\ConexaoSolidaria.Tests.dll
+2026-07-04T16:05:38.9667314+00:00 Microsoft.Testing.Platform.Builder.TestApplication INFORMATION Command line arguments: '--server --diagnostic --diagnostic-verbosity Information --diagnostic-output-directory C:\Users\prolu\OneDrive\Documentos\Hackathon\ConexaoSolidaria\Conexao_Solidaria_REPO\ConexaoSolidaria.Tests\bin\Debug\net10.0\Log --results-directory C:\Users\prolu\OneDrive\Documentos\Hackathon\ConexaoSolidaria\Conexao_Solidaria_REPO\TestResults --client-port 60880'
+2026-07-04T16:05:38.9754709+00:00 Microsoft.Testing.Platform.Builder.TestApplication INFORMATION TESTINGPLATFORM_DEFAULT_HANG_TIMEOUT: ''
+2026-07-04T16:05:39.0932196+00:00 Microsoft.Testing.Platform.Hosts.TestHostBuilder INFORMATION Setting RegisterEnvironmentVariablesConfigurationSource: 'True'
+2026-07-04T16:05:39.1347344+00:00 Microsoft.Testing.Platform.Hosts.TestHostBuilder INFORMATION Setting PlatformExitProcessOnUnhandledException: 'False', config file: False environment variable: 
+2026-07-04T16:05:40.0930739+00:00 Microsoft.Testing.Platform.Requests.TestHostTestFrameworkInvoker INFORMATION Test framework UID: '30ea7c6e-dd24-4152-a360-1387158cd41d' Version: '3.2.2' DisplayName: 'xUnit.net v3 Microsoft.Testing.Platform test framework' Description: 'xUnit.net v3 Microsoft.Testing.Platform test framework'
+2026-07-04T16:05:40.1779620+00:00 xUnit.net INFORMATION xUnit.net v3 In-Process Runner v3.2.2+728c1dce01 (64-bit .NET 10.0.9)
+2026-07-04T16:05:40.2873612+00:00 xUnit.net INFORMATION   Discovering: ConexaoSolidaria.Tests
+2026-07-04T16:05:40.4879012+00:00 xUnit.net INFORMATION   Discovered:  ConexaoSolidaria.Tests
+2026-07-04T16:05:40.5753904+00:00 xUnit.net INFORMATION   Starting:    ConexaoSolidaria.Tests

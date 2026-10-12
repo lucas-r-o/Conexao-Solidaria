@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conexao-solidaria-api
+  namespace: apps
+  labels:
+    app: conexao-solidaria-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: conexao-solidaria-api
+  template:
+    metadata:
+      labels:
+        app: conexao-solidaria-api
+    spec:
+      containers:
+        - name: conexao-solidaria-api
+          image: conexao-solidaria-api:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+            - name: metrics
+              containerPort: 9102
+          envFrom:
+            - configMapRef:
+                name: conexao-solidaria-config
+            - secretRef:
+                name: conexao-solidaria-secrets
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "100m"
+            limits:
+              memory: "2Gi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10

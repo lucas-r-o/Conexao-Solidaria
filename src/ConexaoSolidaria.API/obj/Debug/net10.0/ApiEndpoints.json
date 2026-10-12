@@ -1,0 +1,97 @@
+[
+  {
+    "ContainingType": "ConexaoSolidaria.API.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "loginDTO",
+        "Type": "Models.DTOs.LoginDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ConexaoSolidaria.API.Controllers.CampanhasController",
+    "Method": "CampanhasAtivas",
+    "RelativePath": "campanhas",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ConexaoSolidaria.API.Controllers.CampanhasController",
+    "Method": "Atualizar",
+    "RelativePath": "campanhas/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "Models.DTOs.AtualizarCampanhaDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ConexaoSolidaria.API.Controllers.CampanhasController",
+    "Method": "Criar",
+    "RelativePath": "campanhas/criar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Models.DTOs.CriarCampanhaDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ConexaoSolidaria.API.Controllers.DoacoesController",
+    "Method": "Doar",
+    "RelativePath": "doacoes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "doacao",
+        "Type": "Models.Dtos.DoacaoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ConexaoSolidaria.API.Controllers.DoadoresController",
+    "Method": "Cadastrar",
+    "RelativePath": "doadores",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "usuario",
+        "Type": "Models.Dtos.CadastroDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

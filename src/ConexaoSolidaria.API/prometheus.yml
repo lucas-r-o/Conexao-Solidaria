@@ -1,0 +1,14 @@
+scrape_configs:
+  - job_name: 'conexao-solidaria-api'
+    tls_config:
+        insecure_skip_verify: true
+    static_configs:
+      - targets: ['host.docker.internal:5155']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  - job_name: 'conexao-solidaria-worker'
+    static_configs:
+      - targets: ['host.docker.internal:5001']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
