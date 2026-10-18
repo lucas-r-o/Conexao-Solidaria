@@ -399,6 +399,16 @@ FodyWeavers.xsd
 *.cab
 *.msi
 *.msix
+# Local appsettings / secrets (ignore local/dev secrets but keep production appsettings.json tracked)
+appsettings.*.Local.json
+appsettings.*.Secret.json
+secrets.json
+.env
+.env.*
+
+# Keep EF migrations and appsettings.json tracked by design
+# Do NOT ignore: /src/**/Migrations/, appsettings.json
+
 *.msm
 *.msp
 
