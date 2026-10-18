@@ -26,15 +26,6 @@ Solution: `src/ConexaoSolidaria.slnx`
 - Test all: `dotnet test src/ConexaoSolidaria.Tests`
 - Run locally: `docker compose -f src/docker-compose.yml up --build`
 
-## Structure
-- `src/ConexaoSolidaria.API`: controllers, thin, no business logic
-- `src/ApplicationServices`: use cases and business flow
-- `src/Infrastructure`: database, messaging, external integrations
-- `src/Models`: entities, enums, DTOs. Must not reference other layers.
-- `src/ConexaoSolidaria.Tests`: automated tests
-- `src/Docker`: Dockerfile of application
-- `src/docker-compose.yml`: container setup
-
 ## Code conventions
 - C# with nullable reference types enabled.
 - PascalCase for classes and methods, `_camelCase` for private fields.
