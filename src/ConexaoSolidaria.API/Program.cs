@@ -8,11 +8,7 @@ builder.Services.AddAutentication(builder.Configuration);
 builder.Services.AddContexts(builder.Configuration);
 
 
-builder.Services.AddCors(o => o.AddPolicy("AllowFront", p =>
-    p.WithOrigins("http://localhost:58433")
-     .AllowAnyHeader()
-     .AllowAnyMethod()
-     .AllowCredentials()));
+builder.Services.AddCorsPolicy(builder.Configuration);
 
 builder.Services.AddRepositories();
 builder.Services.AddControllers();
