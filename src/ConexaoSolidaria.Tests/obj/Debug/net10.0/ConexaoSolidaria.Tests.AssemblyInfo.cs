@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ConexaoSolidaria.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49cba0176d78ef53d4df3f5e4b58fa555162edd5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d0c5f643a3d7efeaf92790249834f9b3766d314d")]
 [assembly: System.Reflection.AssemblyProductAttribute("ConexaoSolidaria.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ConexaoSolidaria.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
