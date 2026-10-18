@@ -1,9 +1,9 @@
-﻿namespace Models
+namespace Models
 {
     public enum Status
     {
-        Ativo,
-        Concluido,
-        Cancelado
+        Active,
+        Completed,
+        Cancelled
     }
 }

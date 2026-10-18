@@ -11,13 +11,13 @@ using Moq;
 
 namespace ConexaoSolidaria.Tests;
 
-public class UsuarioServiceTests
+public class UserServiceTests
 {
     private readonly AppDbContext _context;
     private readonly Mock<IPublishEndpoint> _publishMock;
-    private readonly IUsuarioService _service;
+    private readonly IUserService _service;
 
-    public UsuarioServiceTests()
+    public UserServiceTests()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
@@ -41,22 +41,22 @@ public class UsuarioServiceTests
         services.AddServices();
 
         var provider = services.BuildServiceProvider();
-        _service = provider.GetRequiredService<IUsuarioService>();
+        _service = provider.GetRequiredService<IUserService>();
     }
 
     [Fact]
     public async Task CadastrarAsync_DeveSalvarUsuario_QuandoDadosForemValidos()
     {
-        var usuario = new CadastroDto
+        var user = new RegistrationDto
         {
-            Nome = "Doador Teste",
+            Name = "Donor Teste",
             Email = "teste@exemplo.com",
-            CPF = "11144477735",
-            SenhaHash = "Senha123!"
+            TaxId = "11144477735",
+            PasswordHash = "Senha123!"
         };
 
         using var cts = new CancellationTokenSource();
-        var result = await _service.CadastrarAsync(usuario, cts.Token);
+        var result = await _service.RegisterAsync(user, cts.Token);
 
         Assert.NotNull(result.Value);
         Assert.True(result.IsSuccess);
@@ -67,26 +67,26 @@ public class UsuarioServiceTests
     {
         using var cts = new CancellationTokenSource();
 
-        var usuarioExistente = new Usuario
+        var existingUser = new User
         {
             Id = Guid.NewGuid(),
-            Nome = "Existente",
+            Name = "Existente",
             Email = "duplicado@exemplo.com",
-            CPF = "98765432100",
-            SenhaHash = "hash"
+            TaxId = "98765432100",
+            PasswordHash = "hash"
         };
-        _context.Usuarios.Add(usuarioExistente);
+        _context.Users.Add(existingUser);
         await _context.SaveChangesAsync(cts.Token);
 
-        var novoUsuario = new CadastroDto
+        var newUser = new RegistrationDto
         {
-            Nome = "Novo",
+            Name = "Novo",
             Email = "duplicado@exemplo.com",
-            CPF = "11144477735",
-            SenhaHash = "Senha123!"
+            TaxId = "11144477735",
+            PasswordHash = "Senha123!"
         };
 
-        var result = await _service.CadastrarAsync(novoUsuario, cts.Token);
+        var result = await _service.RegisterAsync(newUser, cts.Token);
         Assert.Equal("E-mail já cadastrado.", result.Error);
     }
 }

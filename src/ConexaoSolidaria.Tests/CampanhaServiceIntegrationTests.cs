@@ -15,7 +15,7 @@ public class CampanhaServiceIntegrationTests : IDisposable
     private readonly ServiceProvider _provider;
     private readonly IServiceScope _scope;
     private readonly AppDbContext _context;
-    private readonly ICampanhaService _service;
+    private readonly ICampaignService _service;
 
     public CampanhaServiceIntegrationTests()
     {
@@ -26,7 +26,7 @@ public class CampanhaServiceIntegrationTests : IDisposable
         _provider = services.BuildServiceProvider();
         _scope = _provider.CreateScope();
         _context = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        _service = _scope.ServiceProvider.GetRequiredService<ICampanhaService>();
+        _service = _scope.ServiceProvider.GetRequiredService<ICampaignService>();
     }
 
     public void Dispose()
@@ -36,107 +36,107 @@ public class CampanhaServiceIntegrationTests : IDisposable
     }
 
     [Fact]
-    public async Task CriarAsync_DeveCriarCampanha_ComDadosValidos()
+    public async Task CreateAsync_DeveCriarCampanha_ComDadosValidos()
     {
         // Arrange
-        var dto = new CriarCampanhaDTO
+        var dto = new CreateCampaignDto
         {
-            Titulo = "Minha Campanha",
-            Descricao = "Descrição da campanha",
-            MetaFinanceira = 1000.00m,
-            DataFim = DateTime.UtcNow.AddDays(30)
+            Title = "Minha Campaign",
+            Description = "Descrição da campaign",
+            FinancialGoal = 1000.00m,
+            EndDate = DateTime.UtcNow.AddDays(30)
         };
 
         // Act
-        var result = await _service.CriarAsync(dto);
+        var result = await _service.CreateAsync(dto);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Minha Campanha", result.Titulo);
-        Assert.Equal("Descrição da campanha", result.Descricao);
-        Assert.Equal(1000.00m, result.MetaFinanceira);
-        Assert.Equal(Status.Ativo, result.Status);
-        Assert.Equal(0, result.ValorArrecadado);
-        Assert.NotEqual(default, result.DataInicio);
-        Assert.NotNull(result.DataFim);
+        Assert.Equal("Minha Campaign", result.Title);
+        Assert.Equal("Descrição da campaign", result.Description);
+        Assert.Equal(1000.00m, result.FinancialGoal);
+        Assert.Equal(Status.Active, result.Status);
+        Assert.Equal(0, result.AmountRaised);
+        Assert.NotEqual(default, result.StartDate);
+        Assert.NotNull(result.EndDate);
     }
 
     [Fact]
-    public async Task CriarAsync_DeveIncluirCampanhaNoBanco()
+    public async Task CreateAsync_DeveIncluirCampanhaNoBanco()
     {
         // Arrange
-        var dto = new CriarCampanhaDTO
+        var dto = new CreateCampaignDto
         {
-            Titulo = "Campanha para Teste",
-            Descricao = "Teste de inserção",
-            MetaFinanceira = 500.00m,
-            DataFim = DateTime.UtcNow.AddDays(15)
+            Title = "Campaign para Teste",
+            Description = "Teste de inserção",
+            FinancialGoal = 500.00m,
+            EndDate = DateTime.UtcNow.AddDays(15)
         };
 
         // Act
-        await _service.CriarAsync(dto);
-        var campanhas = await _context.Campanhas.ToListAsync(TestContext.Current.CancellationToken);
+        await _service.CreateAsync(dto);
+        var campanhas = await _context.Campaigns.ToListAsync(TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Single(campanhas);
-        Assert.Equal("Campanha para Teste", campanhas[0].Titulo);
+        Assert.Equal("Campaign para Teste", campanhas[0].Title);
     }
 
     [Fact]
-    public async Task ObterCampanhasAsync_DeveRetornarCampanhasAtivas()
+    public async Task GetCampaignsAsync_DeveRetornarGetActiveCampaigns()
     {
         // Arrange
-        var campanhaAtiva = new Campanha
+        var campanhaAtiva = new Campaign
         {
             Id = Guid.NewGuid(),
-            Titulo = "Campanha Ativa",
-            Descricao = "Descrição",
-            MetaFinanceira = 1000.00m,
-            Status = Status.Ativo,
-            ValorArrecadado = 500.00m
+            Title = "Campaign Ativa",
+            Description = "Descrição",
+            FinancialGoal = 1000.00m,
+            Status = Status.Active,
+            AmountRaised = 500.00m
         };
 
-        var campanhaConcluida = new Campanha
+        var campanhaConcluida = new Campaign
         {
             Id = Guid.NewGuid(),
-            Titulo = "Campanha Concluída",
-            Descricao = "Descrição",
-            MetaFinanceira = 1000.00m,
-            Status = Status.Concluido,
-            ValorArrecadado = 1000.00m
+            Title = "Campaign Concluída",
+            Description = "Descrição",
+            FinancialGoal = 1000.00m,
+            Status = Status.Completed,
+            AmountRaised = 1000.00m
         };
 
-        _context.Campanhas.AddRange(campanhaAtiva, campanhaConcluida);
+        _context.Campaigns.AddRange(campanhaAtiva, campanhaConcluida);
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // Act
-        var result = await _service.ObterCampanhasAsync(TestContext.Current.CancellationToken);
+        var result = await _service.GetCampaignsAsync(TestContext.Current.CancellationToken);
 
         // Assert
         Assert.NotNull(result);
         Assert.Single(result);
-        Assert.Equal("Campanha Ativa", result.First().Titulo);
+        Assert.Equal("Campaign Ativa", result.First().Title);
     }
 
     [Fact]
-    public async Task ObterCampanhasAsync_DeveRetornarListaVazia_QuandoNaoHaCampanhasAtivas()
+    public async Task GetCampaignsAsync_DeveRetornarListaVazia_QuandoNaoHaGetActiveCampaigns()
     {
         // Arrange
-        var campanhaConcluida = new Campanha
+        var campanhaConcluida = new Campaign
         {
             Id = Guid.NewGuid(),
-            Titulo = "Campanha Concluída",
-            Descricao = "Descrição",
-            MetaFinanceira = 1000.00m,
-            Status = Status.Concluido,
-            ValorArrecadado = 1000.00m
+            Title = "Campaign Concluída",
+            Description = "Descrição",
+            FinancialGoal = 1000.00m,
+            Status = Status.Completed,
+            AmountRaised = 1000.00m
         };
 
-        _context.Campanhas.Add(campanhaConcluida);
+        _context.Campaigns.Add(campanhaConcluida);
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // Act
-        var result = await _service.ObterCampanhasAsync(TestContext.Current.CancellationToken);
+        var result = await _service.GetCampaignsAsync(TestContext.Current.CancellationToken);
 
         // Assert
         Assert.NotNull(result);
@@ -144,52 +144,52 @@ public class CampanhaServiceIntegrationTests : IDisposable
     }
 
     [Fact]
-    public async Task AtualizarAsync_DeveAtualizarCampanha_QuandoIdExiste()
+    public async Task UpdateAsync_DeveAtualizarCampanha_QuandoIdExiste()
     {
         // Arrange
-        var campanha = new Campanha
+        var campaign = new Campaign
         {
             Id = Guid.NewGuid(),
-            Titulo = "Título Original",
-            Descricao = "Descrição original",
-            MetaFinanceira = 1000.00m,
-            Status = Status.Ativo
+            Title = "Título Original",
+            Description = "Descrição original",
+            FinancialGoal = 1000.00m,
+            Status = Status.Active
         };
-        _context.Campanhas.Add(campanha);
+        _context.Campaigns.Add(campaign);
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
-        var dto = new AtualizarCampanhaDTO
+        var dto = new UpdateCampaignDto
         {
-            Titulo = "Título Atualizado",
-            Descricao = "Descrição atualizada",
-            MetaFinanceira = 2000.00m,
-            Status = Status.Cancelado
+            Title = "Título Atualizado",
+            Description = "Descrição atualizada",
+            FinancialGoal = 2000.00m,
+            Status = Status.Cancelled
         };
 
         // Act
-        var result = await _service.AtualizarAsync(campanha.Id, dto);
+        var result = await _service.UpdateAsync(campaign.Id, dto);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Título Atualizado", result.Titulo);
-        Assert.Equal("Descrição atualizada", result.Descricao);
-        Assert.Equal(2000.00m, result.MetaFinanceira);
-        Assert.Equal(Status.Cancelado, result.Status);
+        Assert.Equal("Título Atualizado", result.Title);
+        Assert.Equal("Descrição atualizada", result.Description);
+        Assert.Equal(2000.00m, result.FinancialGoal);
+        Assert.Equal(Status.Cancelled, result.Status);
     }
 
     [Fact]
-    public async Task AtualizarAsync_DeveRetornarNulo_QuandoIdNaoExiste()
+    public async Task UpdateAsync_DeveRetornarNulo_QuandoIdNaoExiste()
     {
         // Arrange
-        var dto = new AtualizarCampanhaDTO
+        var dto = new UpdateCampaignDto
         {
-            Titulo = "Título Atualizado",
-            Descricao = "Descrição atualizada",
-            MetaFinanceira = 2000.00m
+            Title = "Título Atualizado",
+            Description = "Descrição atualizada",
+            FinancialGoal = 2000.00m
         };
 
         // Act
-        var result = await _service.AtualizarAsync(Guid.NewGuid(), dto);
+        var result = await _service.UpdateAsync(Guid.NewGuid(), dto);
 
         // Assert
         Assert.Null(result);

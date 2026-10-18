@@ -16,7 +16,7 @@ namespace Infrastructure.Extensions
         }
         public static void AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped<ICampanhaRepository, CampanhaRepository>();
+            services.AddScoped<ICampaignRepository, CampaignRepository>();
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿namespace Models
+namespace Models
 {
     public enum Roles
     {
-        Doador,
-        GestorONG
+        Donor,
+        NGOManager
     }
 }

@@ -7,8 +7,8 @@ namespace ApplicationServices.Services
     {
         public static void AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IUsuarioService, UsuarioService>();
-            services.AddScoped<ICampanhaService, CampanhaService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICampaignService, CampaignService>();
         }
     }
 }

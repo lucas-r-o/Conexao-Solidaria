@@ -2,59 +2,59 @@ namespace Models.Extensions
 {
     public static class StringExtensions
     {
-        public static bool IsValidCpf(this string cpf)
+        public static bool IsValidTaxId(this string taxId)
         {
-            if (string.IsNullOrWhiteSpace(cpf))
+            if (string.IsNullOrWhiteSpace(taxId))
                 return false;
 
             // Remove non-digits
-            var posicao = 0;
-            var digitos = new int[11];
-            foreach (var c in cpf)
+            var position = 0;
+            var digits = new int[11];
+            foreach (var c in taxId)
             {
                 if (char.IsDigit(c))
                 {
-                    if (posicao >= 11) return false;
-                    digitos[posicao++] = c - '0';
+                    if (position >= 11) return false;
+                    digits[position++] = c - '0';
                 }
             }
 
-            if (posicao != 11)
+            if (position != 11)
                 return false;
 
             // Check if all digits are the same
-            bool todosIguais = true;
+            bool allEqual = true;
             for (int i = 1; i < 11; i++)
             {
-                if (digitos[i] != digitos[0])
+                if (digits[i] != digits[0])
                 {
-                    todosIguais = false;
+                    allEqual = false;
                     break;
                 }
             }
-            if (todosIguais)
+            if (allEqual)
                 return false;
 
             // First check digit
-            int soma = 0;
+            int sum = 0;
             for (int i = 0; i < 9; i++)
-                soma += digitos[i] * (10 - i);
+                sum += digits[i] * (10 - i);
 
-            int resto = soma % 11;
-            int digito1 = resto < 2 ? 0 : 11 - resto;
+            int remainder = sum % 11;
+            int firstDigit = remainder < 2 ? 0 : 11 - remainder;
 
-            if (digitos[9] != digito1)
+            if (digits[9] != firstDigit)
                 return false;
 
             // Second check digit
-            soma = 0;
+            sum = 0;
             for (int i = 0; i < 10; i++)
-                soma += digitos[i] * (11 - i);
+                sum += digits[i] * (11 - i);
 
-            resto = soma % 11;
-            int digito2 = resto < 2 ? 0 : 11 - resto;
+            remainder = sum % 11;
+            int secondDigit = remainder < 2 ? 0 : 11 - remainder;
 
-            return digitos[10] == digito2;
+            return digits[10] == secondDigit;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Infrastructure.Middleware;
+using Infrastructure.Middleware;
 using Microsoft.AspNetCore.Builder;
 
 namespace Infrastructure.Extensions

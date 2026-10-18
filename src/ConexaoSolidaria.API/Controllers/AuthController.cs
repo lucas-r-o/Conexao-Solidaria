@@ -8,12 +8,12 @@ namespace ConexaoSolidaria.API.Controllers;
 [Route("auth")]
 public class AuthController : ControllerBase
 {
-    private readonly IUsuarioService _services;
+    private readonly IUserService _services;
 
-    public AuthController(IUsuarioService services) => _services = services;
+    public AuthController(IUserService services) => _services = services;
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO, CancellationToken cancellationToken)
+    public async Task<IActionResult> Login([FromBody] LoginDto loginDTO, CancellationToken cancellationToken)
     {
         var login = await _services.LoginAsync(loginDTO, cancellationToken);
 

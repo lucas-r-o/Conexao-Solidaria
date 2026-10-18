@@ -1,9 +1,9 @@
-﻿namespace Models.Extensions
+namespace Models.Extensions
 {
     public static class StatusExtensions
     {
-        public static bool Ativo(this Status status) => status == Status.Ativo;
-        public static bool Concluido(this Status status) => status == Status.Concluido;
-        public static bool Cancelado(this Status status) => status == Status.Cancelado;
+        public static bool Active(this Status status) => status == Status.Active;
+        public static bool Completed(this Status status) => status == Status.Completed;
+        public static bool Cancelled(this Status status) => status == Status.Cancelled;
     }
 }

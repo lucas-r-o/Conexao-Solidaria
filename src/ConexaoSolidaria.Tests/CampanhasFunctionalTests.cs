@@ -35,34 +35,34 @@ public class CampanhasFunctionalTests : IClassFixture<CampanhasApiFactory>
     }
 
     [Fact]
-    public async Task GetCampanhas_DeveRetornarSomenteCampanhasAtivas()
+    public async Task GetCampaigns_DeveRetornarSomenteGetActiveCampaigns()
     {
         var activeId = Guid.NewGuid();
         var completedId = Guid.NewGuid();
         await using (var scope = _factory.Services.CreateAsyncScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            context.Campanhas.AddRange(
-                new Campanha
+            context.Campaigns.AddRange(
+                new Campaign
                 {
                     Id = activeId,
-                    Titulo = "Campanha funcional ativa",
-                    Descricao = "Descrição de teste",
-                    MetaFinanceira = 1000m,
-                    Status = Status.Ativo
+                    Title = "Campaign funcional ativa",
+                    Description = "Descrição de teste",
+                    FinancialGoal = 1000m,
+                    Status = Status.Active
                 },
-                new Campanha
+                new Campaign
                 {
                     Id = completedId,
-                    Titulo = "Campanha funcional concluída",
-                    Descricao = "Descrição de teste",
-                    MetaFinanceira = 1000m,
-                    Status = Status.Concluido
+                    Title = "Campaign funcional concluída",
+                    Description = "Descrição de teste",
+                    FinancialGoal = 1000m,
+                    Status = Status.Completed
                 });
             await context.SaveChangesAsync(TestContext.Current.CancellationToken);
         }
 
-        using var response = await _client.GetAsync("/campanhas", TestContext.Current.CancellationToken);
+        using var response = await _client.GetAsync("/campaigns", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         using var body = System.Text.Json.JsonDocument.Parse(
@@ -76,45 +76,45 @@ public class CampanhasFunctionalTests : IClassFixture<CampanhasApiFactory>
     }
 
     [Fact]
-    public async Task PostCampanhasCriar_DeveRetornar201EPersistir_QuandoDadosValidos()
+    public async Task PostCampaignsCreate_DeveRetornar201EPersistir_QuandoDadosValidos()
     {
-        var dto = new CriarCampanhaDTO
+        var dto = new CreateCampaignDto
         {
-            Titulo = "Campanha funcional criada",
-            Descricao = "Criada pelo endpoint HTTP",
-            MetaFinanceira = 750m,
-            DataFim = DateTime.UtcNow.AddDays(10)
+            Title = "Campaign funcional criada",
+            Description = "Criada pelo endpoint HTTP",
+            FinancialGoal = 750m,
+            EndDate = DateTime.UtcNow.AddDays(10)
         };
 
-        using var request = CreateAuthorizedRequest(HttpMethod.Post, "/campanhas/criar");
+        using var request = CreateAuthorizedRequest(HttpMethod.Post, "/campaigns/criar");
         request.Content = JsonContent.Create(dto);
         using var response = await _client.SendAsync(request, TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        var created = await response.Content.ReadFromJsonAsync<Campanha>(
+        var created = await response.Content.ReadFromJsonAsync<Campaign>(
             cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(created);
-        Assert.Equal(dto.Titulo, created.Titulo);
+        Assert.Equal(dto.Title, created.Title);
 
         await using var scope = _factory.Services.CreateAsyncScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var persisted = await context.Campanhas.SingleAsync(
+        var persisted = await context.Campaigns.SingleAsync(
             campaign => campaign.Id == created.Id,
             TestContext.Current.CancellationToken);
-        Assert.Equal(dto.Titulo, persisted.Titulo);
+        Assert.Equal(dto.Title, persisted.Title);
     }
 
     [Fact]
-    public async Task PostCampanhasCriar_DeveRetornar400_QuandoDadosInvalidos()
+    public async Task PostCampaignsCreate_DeveRetornar400_QuandoDadosInvalidos()
     {
-        var dto = new CriarCampanhaDTO
+        var dto = new CreateCampaignDto
         {
-            Titulo = string.Empty,
-            Descricao = string.Empty,
-            MetaFinanceira = 0
+            Title = string.Empty,
+            Description = string.Empty,
+            FinancialGoal = 0
         };
 
-        using var request = CreateAuthorizedRequest(HttpMethod.Post, "/campanhas/criar");
+        using var request = CreateAuthorizedRequest(HttpMethod.Post, "/campaigns/criar");
         request.Content = JsonContent.Create(dto);
         using var response = await _client.SendAsync(request, TestContext.Current.CancellationToken);
 
@@ -124,15 +124,15 @@ public class CampanhasFunctionalTests : IClassFixture<CampanhasApiFactory>
     [Fact]
     public async Task PutCampanha_DeveRetornar404_QuandoIdNaoExiste()
     {
-        var dto = new AtualizarCampanhaDTO
+        var dto = new UpdateCampaignDto
         {
-            Titulo = "Campanha atualizada",
-            Descricao = "Descrição atualizada",
-            MetaFinanceira = 900m,
-            Status = Status.Ativo
+            Title = "Campaign atualizada",
+            Description = "Descrição atualizada",
+            FinancialGoal = 900m,
+            Status = Status.Active
         };
 
-        using var request = CreateAuthorizedRequest(HttpMethod.Put, $"/campanhas/{Guid.NewGuid()}");
+        using var request = CreateAuthorizedRequest(HttpMethod.Put, $"/campaigns/{Guid.NewGuid()}");
         request.Content = JsonContent.Create(dto);
         using var response = await _client.SendAsync(request, TestContext.Current.CancellationToken);
 
@@ -143,7 +143,7 @@ public class CampanhasFunctionalTests : IClassFixture<CampanhasApiFactory>
     {
         var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(CampanhasApiFactory.JwtTestKey));
         var token = new JwtSecurityToken(
-            claims: [new Claim(ClaimTypes.Role, nameof(Roles.GestorONG))],
+            claims: [new Claim(ClaimTypes.Role, nameof(Roles.NGOManager))],
             expires: DateTime.UtcNow.AddMinutes(5),
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 

@@ -3,7 +3,7 @@ using Models.DTOs;
 
 namespace ConexaoSolidaria.Tests;
 
-public class DataFimValidatorTests
+public class EndDateValidatorTests
 {
     [Fact]
     public void CriarCampanhaDto_DeveRejeitarDataFimAnteriorAoDiaAtualUtc()
@@ -30,20 +30,20 @@ public class DataFimValidatorTests
         Assert.Empty(errors);
     }
 
-    private static List<ValidationResult> Validate(DateTime? dataFim)
+    private static List<ValidationResult> Validate(DateTime? endDate)
     {
-        var campanha = new CriarCampanhaDTO
+        var campaign = new CreateCampaignDto
         {
-            Titulo = "Campanha de teste",
-            Descricao = "Descrição de teste",
-            MetaFinanceira = 100m,
-            DataFim = dataFim
+            Title = "Campaign de teste",
+            Description = "Descrição de teste",
+            FinancialGoal = 100m,
+            EndDate = endDate
         };
         var errors = new List<ValidationResult>();
 
         Validator.TryValidateObject(
-            campanha,
-            new ValidationContext(campanha),
+            campaign,
+            new ValidationContext(campaign),
             errors,
             validateAllProperties: true);
 
