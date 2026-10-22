@@ -60,6 +60,30 @@ public class UserServiceTests
 
         Assert.NotNull(result.Value);
         Assert.True(result.IsSuccess);
+        var savedUser = await _context.Usuarios.SingleAsync(
+            existing => existing.Email == user.Email,
+            cts.Token);
+        Assert.Equal(Roles.Donor, savedUser.Role);
+    }
+
+    [Fact]
+    public async Task CadastrarGestorAsync_DeveSalvarUsuarioComRoleNGOManager()
+    {
+        var user = new RegistrationDto
+        {
+            Name = "Manager Test",
+            Email = "manager@example.com",
+            TaxId = "11144477735",
+            PasswordHash = "Senha123!"
+        };
+
+        var result = await _service.RegisterManagerAsync(user, TestContext.Current.CancellationToken);
+
+        Assert.True(result.IsSuccess);
+        var savedUser = await _context.Usuarios.SingleAsync(
+            existing => existing.Email == user.Email,
+            TestContext.Current.CancellationToken);
+        Assert.Equal(Roles.NGOManager, savedUser.Role);
     }
 
     [Fact]
@@ -70,12 +94,12 @@ public class UserServiceTests
         var existingUser = new User
         {
             Id = Guid.NewGuid(),
-            Name = "Existente",
+            Nome = "Existente",
             Email = "duplicado@exemplo.com",
-            TaxId = "98765432100",
-            PasswordHash = "hash"
+            CPF = "98765432100",
+            SenhaHash = "hash"
         };
-        _context.Users.Add(existingUser);
+        _context.Usuarios.Add(existingUser);
         await _context.SaveChangesAsync(cts.Token);
 
         var newUser = new RegistrationDto

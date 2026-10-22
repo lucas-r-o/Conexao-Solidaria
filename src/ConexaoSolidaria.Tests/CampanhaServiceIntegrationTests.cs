@@ -52,13 +52,13 @@ public class CampanhaServiceIntegrationTests : IDisposable
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Minha Campaign", result.Title);
-        Assert.Equal("Descrição da campaign", result.Description);
-        Assert.Equal(1000.00m, result.FinancialGoal);
+        Assert.Equal("Minha Campaign", result.Titulo);
+        Assert.Equal("Descrição da campaign", result.Descricao);
+        Assert.Equal(1000.00m, result.MetaFinanceira);
         Assert.Equal(Status.Active, result.Status);
-        Assert.Equal(0, result.AmountRaised);
-        Assert.NotEqual(default, result.StartDate);
-        Assert.NotNull(result.EndDate);
+        Assert.Equal(0, result.ValorArrecadado);
+        Assert.NotEqual(default, result.DataInicio);
+        Assert.NotNull(result.DataFim);
     }
 
     [Fact]
@@ -75,11 +75,11 @@ public class CampanhaServiceIntegrationTests : IDisposable
 
         // Act
         await _service.CreateAsync(dto);
-        var campanhas = await _context.Campaigns.ToListAsync(TestContext.Current.CancellationToken);
+        var campanhas = await _context.Campanhas.ToListAsync(TestContext.Current.CancellationToken);
 
         // Assert
         Assert.Single(campanhas);
-        Assert.Equal("Campaign para Teste", campanhas[0].Title);
+        Assert.Equal("Campaign para Teste", campanhas[0].Titulo);
     }
 
     [Fact]
@@ -89,24 +89,24 @@ public class CampanhaServiceIntegrationTests : IDisposable
         var campanhaAtiva = new Campaign
         {
             Id = Guid.NewGuid(),
-            Title = "Campaign Ativa",
-            Description = "Descrição",
-            FinancialGoal = 1000.00m,
+            Titulo = "Campaign Ativa",
+            Descricao = "Descrição",
+            MetaFinanceira = 1000.00m,
             Status = Status.Active,
-            AmountRaised = 500.00m
+            ValorArrecadado = 500.00m
         };
 
         var campanhaConcluida = new Campaign
         {
             Id = Guid.NewGuid(),
-            Title = "Campaign Concluída",
-            Description = "Descrição",
-            FinancialGoal = 1000.00m,
+            Titulo = "Campaign Concluída",
+            Descricao = "Descrição",
+            MetaFinanceira = 1000.00m,
             Status = Status.Completed,
-            AmountRaised = 1000.00m
+            ValorArrecadado = 1000.00m
         };
 
-        _context.Campaigns.AddRange(campanhaAtiva, campanhaConcluida);
+        _context.Campanhas.AddRange(campanhaAtiva, campanhaConcluida);
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // Act
@@ -125,14 +125,14 @@ public class CampanhaServiceIntegrationTests : IDisposable
         var campanhaConcluida = new Campaign
         {
             Id = Guid.NewGuid(),
-            Title = "Campaign Concluída",
-            Description = "Descrição",
-            FinancialGoal = 1000.00m,
+            Titulo = "Campaign Concluída",
+            Descricao = "Descrição",
+            MetaFinanceira = 1000.00m,
             Status = Status.Completed,
-            AmountRaised = 1000.00m
+            ValorArrecadado = 1000.00m
         };
 
-        _context.Campaigns.Add(campanhaConcluida);
+        _context.Campanhas.Add(campanhaConcluida);
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         // Act
@@ -150,12 +150,12 @@ public class CampanhaServiceIntegrationTests : IDisposable
         var campaign = new Campaign
         {
             Id = Guid.NewGuid(),
-            Title = "Título Original",
-            Description = "Descrição original",
-            FinancialGoal = 1000.00m,
+            Titulo = "Título Original",
+            Descricao = "Descrição original",
+            MetaFinanceira = 1000.00m,
             Status = Status.Active
         };
-        _context.Campaigns.Add(campaign);
+        _context.Campanhas.Add(campaign);
         await _context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var dto = new UpdateCampaignDto
@@ -171,9 +171,9 @@ public class CampanhaServiceIntegrationTests : IDisposable
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Título Atualizado", result.Title);
-        Assert.Equal("Descrição atualizada", result.Description);
-        Assert.Equal(2000.00m, result.FinancialGoal);
+        Assert.Equal("Título Atualizado", result.Titulo);
+        Assert.Equal("Descrição atualizada", result.Descricao);
+        Assert.Equal(2000.00m, result.MetaFinanceira);
         Assert.Equal(Status.Cancelled, result.Status);
     }
 

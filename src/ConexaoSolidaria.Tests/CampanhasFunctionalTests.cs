@@ -42,21 +42,21 @@ public class CampanhasFunctionalTests : IClassFixture<CampanhasApiFactory>
         await using (var scope = _factory.Services.CreateAsyncScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            context.Campaigns.AddRange(
+            context.Campanhas.AddRange(
                 new Campaign
                 {
                     Id = activeId,
-                    Title = "Campaign funcional ativa",
-                    Description = "Descrição de teste",
-                    FinancialGoal = 1000m,
+                    Titulo = "Campaign funcional ativa",
+                    Descricao = "Descrição de teste",
+                    MetaFinanceira = 1000m,
                     Status = Status.Active
                 },
                 new Campaign
                 {
                     Id = completedId,
-                    Title = "Campaign funcional concluída",
-                    Description = "Descrição de teste",
-                    FinancialGoal = 1000m,
+                    Titulo = "Campaign funcional concluída",
+                    Descricao = "Descrição de teste",
+                    MetaFinanceira = 1000m,
                     Status = Status.Completed
                 });
             await context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -94,14 +94,14 @@ public class CampanhasFunctionalTests : IClassFixture<CampanhasApiFactory>
         var created = await response.Content.ReadFromJsonAsync<Campaign>(
             cancellationToken: TestContext.Current.CancellationToken);
         Assert.NotNull(created);
-        Assert.Equal(dto.Title, created.Title);
+        Assert.Equal(dto.Title, created.Titulo);
 
         await using var scope = _factory.Services.CreateAsyncScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var persisted = await context.Campaigns.SingleAsync(
+        var persisted = await context.Campanhas.SingleAsync(
             campaign => campaign.Id == created.Id,
             TestContext.Current.CancellationToken);
-        Assert.Equal(dto.Title, persisted.Title);
+        Assert.Equal(dto.Title, persisted.Titulo);
     }
 
     [Fact]
