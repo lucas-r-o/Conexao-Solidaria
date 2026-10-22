@@ -7,7 +7,7 @@ using Models.DTOs;
 namespace ConexaoSolidaria.API.Controllers;
 
 [ApiController]
-[Route("campaigns")]
+[Route("campanhas")]
 public class CampaignsController : ControllerBase
 {
     private readonly ICampaignService _campanhaService;

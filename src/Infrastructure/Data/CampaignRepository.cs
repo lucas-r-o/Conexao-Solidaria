@@ -9,16 +9,16 @@ namespace Infrastructure.Data
         private readonly AppDbContext _db = db;
         public async Task<bool> UpdateAsync(ArrecadacaoAtualizadaEvent campaignUpdated)
         {
-            var campaign = await _db.Campaigns.FirstOrDefaultAsync(p => p.Id == campaignUpdated.CampanhaId);
+            var campaign = await _db.Campanhas.FirstOrDefaultAsync(p => p.Id == campaignUpdated.CampanhaId);
 
             if (campaign == null) return false;
 
-            campaign.AmountRaised = campaignUpdated.TotalArrecadado;
+            campaign.ValorArrecadado = campaignUpdated.TotalArrecadado;
 
-            if (campaign.AmountRaised >= campaign.FinancialGoal)
+            if (campaign.ValorArrecadado >= campaign.MetaFinanceira)
                 campaign.Status = Status.Completed;
 
-            _db.Campaigns.Update(campaign);
+            _db.Campanhas.Update(campaign);
             var result = await _db.SaveChangesAsync();
 
             return result > 0;
