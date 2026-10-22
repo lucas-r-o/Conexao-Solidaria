@@ -32,28 +32,33 @@ internal class UserService : IUserService
 
     public async Task<Result<string>> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginDto.Email, cancellationToken);
+        var user = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == loginDto.Email, cancellationToken);
 
-        if (user == null || !UserHelper.IsValidPassword(loginDto.Password, user.PasswordHash))
+        if (user == null || !UserHelper.IsValidPassword(loginDto.Password, user.SenhaHash))
             return Result<string>.Failure(MESSAGE_ERROR);
 
         return Result<string>.Success(GenerateToken(user));
     }
 
-    public async Task<Result<string>> RegisterAsync(RegistrationDto userDto, CancellationToken cancellationToken)
+    public Task<Result<string>> RegisterAsync(RegistrationDto userDto, CancellationToken cancellationToken) => RegisterAsync(userDto, Roles.Donor, cancellationToken);
+
+    public Task<Result<string>> RegisterManagerAsync(RegistrationDto userDto, CancellationToken cancellationToken) => RegisterAsync(userDto, Roles.NGOManager, cancellationToken);
+
+    private async Task<Result<string>> RegisterAsync(RegistrationDto userDto, Roles role, CancellationToken cancellationToken)
     {
-        if (await _context.Users.AnyAsync(u => u.Email == userDto.Email, cancellationToken))
+        if (await _context.Usuarios.AnyAsync(u => u.Email == userDto.Email, cancellationToken))
             return Result<string>.Failure("E-mail já cadastrado.");
 
         var user = new User()
         {
-            Name = userDto.Name,
+            Nome = userDto.Name,
             Email = userDto.Email,
-            TaxId = userDto.TaxId,
-            PasswordHash = UserHelper.HashPassword(userDto.PasswordHash),
+            CPF = userDto.TaxId,
+            SenhaHash = UserHelper.HashPassword(userDto.PasswordHash),
+            Role = role,
         };
 
-        _context.Users.Add(user);
+        _context.Usuarios.Add(user);
         await _context.SaveChangesAsync(cancellationToken);
 
         return Result<string>.Success("Usuário cadastrado com sucesso");
@@ -61,8 +66,8 @@ internal class UserService : IUserService
 
     public async Task<bool> TryDonationAsync(DonationDto donation, CancellationToken cancellationToken = default)
     {
-        var goal = await _context.Campaigns.Where(p => p.Status == Status.Active && p.Id == donation.CampaignId)
-                                     .Select(p => (decimal?)p.FinancialGoal)
+        var goal = await _context.Campanhas.Where(p => p.Status == Status.Active && p.Id == donation.CampaignId)
+                                     .Select(p => (decimal?)p.MetaFinanceira)
                                      .FirstOrDefaultAsync(cancellationToken);
         if (goal == null) return false;
 
@@ -74,11 +79,11 @@ internal class UserService : IUserService
             MetaFinanceira = goal.Value
         }, cancellationToken);
 
-        _ = await _context.Donations.AddAsync(new()
+        _ = await _context.Doacoes.AddAsync(new()
         {
-            Amount = donation.Amount,
-            UserId = donation.DonorId,
-            CampaignId = donation.CampaignId,
+            Valor = donation.Amount,
+            UsuarioId = donation.DonorId,
+            CampanhaId = donation.CampaignId,
         }, cancellationToken);
 
         _ = await _context.SaveChangesAsync(cancellationToken);

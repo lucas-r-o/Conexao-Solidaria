@@ -13,7 +13,7 @@ public class DonorsController : ControllerBase
 
     public DonorsController(IUserService usuarioService) => _usuarioService = usuarioService;
 
-    [Route("donors")]
+    [Route("doacao")]
     [HttpPost]
     public async Task<IActionResult> Register([FromBody] RegistrationDto user, CancellationToken cancellationToken)
     {
@@ -22,7 +22,7 @@ public class DonorsController : ControllerBase
         return !newUser.IsSuccess ? BadRequest(newUser.Value) : CreatedAtAction(nameof(Register), newUser.Value);
     }
 
-    [HttpPost("/donations")]
+    [HttpPost("/usuarios/doar")]
     [Authorize(Roles = nameof(Roles.Donor))]
     public async Task<IActionResult> Donate([FromBody] DonationDto donation, CancellationToken cancellationToken)
     {
