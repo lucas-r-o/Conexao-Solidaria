@@ -1,57 +1,62 @@
-# Conexão Solidária — API Principal
+﻿# Conexão Solidária — Main API
 
-API desenvolvida para o Hackathon Conexão Solidária. Responsável pelo gerenciamento de usuários (ONGS e Doadores), criação de campanhas e registro das intenções de doação.
+This API was developed for the Conexão Solidária hackathon. It manages users (NGOs and donors), creates fundraising campaigns, and records donation intent events.
 
-## Tecnologias Utilizadas
-* .NET (C#)
-* Entity Framework Core
-* PostgreSQL
-* RabbitMQ & MassTransit (Mensageria assíncrona)
-* Docker & Docker Compose
-* Kubernetes (Docker Desktop)
-* Prometheus & Grafana (Observabilidade)
+## Technologies used
+- .NET (C#)
+- Entity Framework Core
+- PostgreSQL
+- RabbitMQ & MassTransit (asynchronous messaging)
+- Docker & Docker Compose
+- Kubernetes (Docker Desktop)
+- Prometheus & Grafana (observability)
 
-## Pré-requisitos
-* Docker Desktop instalado e rodando, com o Kubernetes habilitado.
-* SDK do .NET instalado.
-* `kubectl` configurado apontando para o cluster local do Docker Desktop.
-
----
-
-## Como rodar o Banco de Dados e RabbitMQ
-
-Existem duas formas de subir a infraestrutura: via **Docker Compose** (mais simples, para desenvolvimento do dia a dia) ou via **Kubernetes** (ambiente que replica a arquitetura final do projeto). Escolha uma delas e configure o `Host` de acordo com a tabela abaixo.
-
-### Opção A — Docker Compose
-
-1. Na raiz do projeto, crie um arquivo chamado `.env`.
-2. Adicione a seguinte linha dentro do arquivo, definindo a senha do banco:
-   `POSTGRES_PASSWORD=sua_senha_aqui`
-3. Suba os containers do PostgreSQL e RabbitMQ:
-   `docker compose up -d`
-
-### Opção B — Kubernetes
-
-Veja a seção [Executando via Kubernetes](#-executando-via-kubernetes) mais abaixo.
+## Requirements
+- Docker Desktop installed and running, with Kubernetes enabled if you want to use the K8s environment.
+- .NET SDK installed.
+- `kubectl` configured for the local Docker Desktop cluster.
 
 ---
 
-## Como configurar a API (Ambiente Local)
+## Local infrastructure
 
-Este projeto **não utiliza o .NET Secret Manager**. As configurações de conexão, JWT e barramento são feitas via `appsettings.Development.json`.
+The project supports two common environments:
+- Local development with Docker Compose (RabbitMQ only, plus an external PostgreSQL instance such as Supabase or a local PostgreSQL server)
+- Kubernetes deployment using the manifests in `src/ConexaoSolidaria.API/k8s`
 
-1. Entre na pasta da API:
-   `cd ConexaoSolidaria.API`
+### Start RabbitMQ locally
 
-2. Crie (ou edite) o arquivo `appsettings.Development.json` com o seguinte conteúdo:
+From the repository root:
+
+```bash
+docker compose -f src/docker-compose.yml up -d
+```
+
+This compose file starts only RabbitMQ, which is the component used for outbound events. The application expects a PostgreSQL connection string configured separately (for example via `appsettings.Development.json`, environment variables, or User Secrets).
+
+> The project is configured to use Supabase/PostgreSQL in development by default, so the local PostgreSQL service is not spun up by the repo's Docker Compose file.
+
+---
+
+## Local API configuration
+
+The API is configured using `appsettings.Development.json` and can also be complemented with .NET User Secrets. Do not commit real credentials or production connection strings.
+
+1. Go to the API folder:
+
+```bash
+cd src/ConexaoSolidaria.API
+```
+
+2. Create or edit `appsettings.Development.json` with a configuration similar to:
 
 ```json
 {
   "ConnectionStrings": {
-    "CONEXAO_SOLIDARIA": "Host=;Port=;Database=conexaosolidaria;Username=postgres;Password=sua_senha_aqui"
+    "CONEXAO_SOLIDARIA": "Host=localhost;Port=5432;Database=conexaosolidaria;Username=postgres;Password=sua_senha_aqui"
   },
   "Jwt": {
-    "Key": "uma_chave_segura_de_pelo_menos_256_bits_aqui"
+    "Key": "replace_with_a_secure_key_of_at_least_256_bits"
   },
   "Bus": {
     "Host": "localhost",
@@ -62,30 +67,44 @@ Este projeto **não utiliza o .NET Secret Manager**. As configurações de conex
 }
 ```
 
-3. **Atenção ao valor de `Bus:Host`**, ele muda dependendo de como você subiu a infraestrutura:
+3. `Bus:Host` depends on the environment:
 
-| Ambiente | Valor de `Bus:Host` |
-|---|---|
+| Environment | `Bus:Host` value |
+| --- | --- |
 | Docker Compose | `localhost` |
 | Kubernetes (Docker Desktop) | `host.docker.internal` |
 
-4. Localmente, a porta do RabbitMQ é sempre `5672`, com usuário e senha `guest`.
+4. RabbitMQ is exposed locally on port `5672` with credentials `guest` / `guest`.
 
-5. Crie as tabelas no banco de dados aplicando as migrações:
-   `dotnet ef database update`
+5. Apply database migrations:
 
-6. Rode o projeto:
-   `dotnet run`
+```bash
+dotnet ef database update --project src/ConexaoSolidaria.API --startup-project src/ConexaoSolidaria.API
+```
+
+If you are already inside the API folder, this is enough:
+
+```bash
+dotnet ef database update
+```
+
+6. Run the API:
+
+```bash
+dotnet run --project src/ConexaoSolidaria.API
+```
+
+The project is configured with the `http` launch profile at `http://localhost:5155`.
 
 ---
 
-## ☸️ Executando via Kubernetes
+## Running via Kubernetes
 
-O projeto também pode ser executado inteiramente dentro do cluster Kubernetes local (Docker Desktop).
+The application can also run inside a local Kubernetes cluster (Docker Desktop).
 
-### Passo 1: Configurar os Secrets
+### Step 1: Configure secrets
 
-O arquivo `k8s/secrets.yaml` é versionado apenas como template, com os campos sensíveis em branco:
+The file `src/ConexaoSolidaria.API/k8s/secrets.yaml` is committed as a template with sensitive values left blank.
 
 ```yaml
 apiVersion: v1
@@ -100,124 +119,177 @@ stringData:
   Jwt__Key: ""
 ```
 
-Antes de aplicar os manifests, preencha localmente:
-- `ConnectionStrings__CONEXAO_SOLIDARIA`: string de conexão do PostgreSQL (Supabase ou local).
-- `Jwt__Key`: chave segura de pelo menos 256 bits para assinatura dos tokens JWT.
+Fill in these values locally before applying the manifests:
+- `ConnectionStrings__CONEXAO_SOLIDARIA`: PostgreSQL connection string (Supabase or local DB)
+- `Jwt__Key`: secure key with at least 256 bits
 
-> ⚠️ Nunca faça commit deste arquivo com valores preenchidos.
+> Do not commit this file with real values.
 
-### Passo 2: Gerar a imagem Docker da API
+### Step 2: Build the Docker image for the API
+
+From the repository root:
 
 ```bash
-docker build -t conexao-solidaria-api:latest .
+docker build -f src/Docker/Dockerfile -t conexao-solidaria-api:latest .
 ```
 
-> ⚠️ O nome da imagem precisa ser exatamente `conexao-solidaria-api:latest`, pois é essa referência que os manifests do Kubernetes utilizam. Sem isso, o pod não sobe corretamente.
+> The image name must remain exactly `conexao-solidaria-api:latest`, because the Kubernetes manifests reference it directly.
 
-### Passo 3: Aplicar os manifests do Kubernetes
+### Step 3: Apply the Kubernetes manifests
 
-Acesse a pasta de manifests da API:
+Go to the API manifests folder:
+
 ```bash
-cd ConexaoSolidaria.API/k8s
+cd src/ConexaoSolidaria.API/k8s
 ```
 
-Primeiro, crie o namespace:
+Create the namespace:
+
 ```bash
 kubectl apply -f namespace.yaml
 ```
 
-Depois, aplique o restante dos manifests (Deployments, Services, ConfigMaps, Secrets):
+Then apply the remaining manifests:
+
 ```bash
 kubectl apply -f .
 ```
 
-### Passo 4: Verificar se o pod subiu corretamente
+### Step 4: Verify the pod is running
 
 ```bash
 kubectl get pods -n apps
 ```
 
-O pod da API deve aparecer com status `Running`.
+The API pod should show `Running` status.
 
-> 💡 Lembre-se: como o cluster é local (Docker Desktop), a API rodando dentro de um pod precisa se conectar ao RabbitMQ e ao Postgres usando `host.docker.internal` como Host, e não `localhost` — conforme indicado na tabela acima.
-
----
-
-## 🔄 CI/CD
-
-O pipeline está em `.github/workflows/ci.yml` e é executado automaticamente a cada push na branch `main`. Ele realiza, nesta ordem:
-1. Restore, build e execução dos testes unitários (xUnit) do projeto.
-2. Build e push da imagem Docker da API (`conexao-solidaria-api`) para o Docker Hub, com as tags `latest` e o SHA do commit.
+> Since this is a local Docker Desktop cluster, the API running inside a pod must connect to RabbitMQ and Postgres using `host.docker.internal` instead of `localhost`.
 
 ---
 
-## 📊 Observabilidade
+## CI/CD
 
-A API expõe métricas no endpoint `/metrics` e health checks em `/health` (usado pelas probes do Kubernetes), consumidos pelo Prometheus e visualizados no Grafana.
+The pipeline is defined in `.github/workflows/ci.yml` and runs automatically on pushes to `main`.
 
-### Local (Docker Compose)
+It performs the following steps in order:
+1. Restore dependencies
+2. Build the solution
+3. Run unit tests
+4. Build and push the API Docker image to Docker Hub with the tags `latest` and the commit SHA
 
-Crie um arquivo `prometheus.yml` na raiz do projeto (mesmo diretório do `docker-compose.yml`) com o seguinte conteúdo:
+---
+
+## Observability
+
+The API exposes metrics at `/metrics` and health checks at `/health` (used by Kubernetes probes). These are consumed by Prometheus and visualized in Grafana.
+
+### Local environment (Docker Compose)
+
+Create a file named `prometheus.yml` in the repo root (same folder as the Docker Compose file) with:
 
 ```yaml
 scrape_configs:
   - job_name: 'conexao-solidaria-api'
     tls_config:
-        insecure_skip_verify: true
+      insecure_skip_verify: true
     static_configs:
       - targets: ['host.docker.internal:5155']
     metrics_path: '/metrics'
     scrape_interval: 15s
 ```
 
-> A porta `5155` corresponde à porta HTTP local da API (perfil `http` do `launchSettings.json`). Ajuste caso sua porta local seja diferente.
+> Port `5155` is the local HTTP port used by the API (`http` launch profile from `launchSettings.json`). Adjust it if needed.
 
-Suba a infraestrutura com `docker compose up -d` e acesse:
-- **Prometheus:** http://localhost:9090
-- **Grafana:** http://localhost:3000 (login padrão: `admin` / `admin`)
+Start the infrastructure:
 
-No Grafana, adicione o Prometheus como datasource (`http://prometheus:9090`) e crie um dashboard com as métricas desejadas (ex.: contagem de requisições HTTP, uso de CPU/memória).
+```bash
+docker compose -f src/docker-compose.yml up -d
+```
+
+Then access:
+- Prometheus: http://localhost:9090
+- Grafana: http://localhost:3000 (default login: `admin` / `admin`)
+
+In Grafana, add Prometheus as a data source (`http://prometheus:9090`) and create dashboards for the desired metrics (for example, HTTP request count and CPU/memory usage).
 
 ### Kubernetes
 
-Com o cluster no ar (`kubectl apply -f .` dentro da pasta `k8s/`), acesse:
-- **Prometheus:** http://localhost:30090
-- **Grafana:** http://localhost:30000 (login: `admin` / `admin`, já configurado via variáveis de ambiente no deployment)
+With the cluster running (`kubectl apply -f .` inside `src/ConexaoSolidaria.API/k8s`), access:
+- Prometheus: http://localhost:30090
+- Grafana: http://localhost:30000 (login: `admin` / `admin`)
 
-O Grafana já sobe com o Prometheus (`http://prometheus-service:9090`) pré-configurado como datasource. **O dashboard precisa ser importado/criado manualmente** na primeira execução — não há provisionamento automático de dashboards neste momento.
-
-Internamente, o Prometheus coleta as métricas da API através do Service `metrics` (porta `9102`), que redireciona para a porta `8080` do pod, onde o endpoint `/metrics` está exposto.
+Grafana is started with Prometheus already configured as a data source (`http://prometheus-service:9090`). The dashboard itself must be created/imported manually on first use.
 
 ---
 
-## 🐰 RabbitMQ Management
+## RabbitMQ management
 
-Para acompanhar visualmente os eventos (`DoacaoRecebidaEvent`) passando pela fila:
+To monitor events such as `DoacaoRecebidaEvent` flowing through the queue:
 
-- **Docker Compose:** http://localhost:15672
-- **Kubernetes:** http://localhost:30015
+- Docker Compose: http://localhost:15672
+- Kubernetes: http://localhost:30015
 
-Login padrão em ambos os ambientes: `guest` / `guest`.
+Default credentials in both environments: `guest` / `guest`.
 
 ---
 
-## Como rodar os Testes Unitários
+## Running unit tests
 
-Para rodar a suíte de testes unitários xUnit da aplicação a partir da raiz:
+Run the xUnit suite from the repository root:
+
 ```bash
-dotnet test ConexaoSolidaria.slnx
+dotnet test src/ConexaoSolidaria.Tests
 ```
 
-## Como Testar os Endpoints
+Alternative from the solution root:
 
-Você pode testar todos os fluxos da API (cadastro público, login de múltiplos perfis, campanhas e doações seguras via fila) abrindo o arquivo [ConexaoSolidaria.API.http](./ConexaoSolidaria.API/ConexaoSolidaria.API.http) no editor e enviando as requisições na ordem indicada.
+```bash
+dotnet test src/ConexaoSolidaria.slnx
+```
 
-## 🔄 Integração com o Worker (Multi-Repositório)
+---
 
-Este projeto foi construído utilizando uma arquitetura orientada a eventos para garantir alta escalabilidade no processamento de doações. A solução está dividida em dois repositórios distintos:
-1. **API Principal (`application` — este repositório)**: Responsável pelas regras de negócio da API, persistência das campanhas, autenticação e publicação dos eventos de doação no RabbitMQ.
-2. **Worker (`worker` — repositório irmão)**: Um serviço de background que consome as mensagens de doação da fila no RabbitMQ, computa e atualiza o saldo e progresso financeiro das campanhas no mesmo banco de dados PostgreSQL.
+## Testing endpoints
 
-### Fluxo completo:
+You can exercise the API flows (public registration, login for multiple roles, campaigns, and donation processing via queue) by opening [src/ConexaoSolidaria.API/ConexaoSolidaria.API.http](src/ConexaoSolidaria.API/ConexaoSolidaria.API.http) in your editor and sending the requests in order.
 
-![Diagrama](diagrama-arquitetura.png)
+---
+
+## Integration with the Worker (multi-repository)
+
+This project was designed with an event-driven architecture to support high scalability in donation processing. The solution is split across two repositories:
+
+1. Main API (`application` — this repository): handles business rules, campaign persistence, authentication, and donation event publication to RabbitMQ.
+2. Worker (`worker` — sibling repository): background service that consumes donation messages from the RabbitMQ queue, calculates amounts, and updates the fundraising totals and progress in the same PostgreSQL database.
+
+### End-to-end flow:
+
+![Architecture diagram](diagrama-arquitetura.png)
+
+---
+
+## Useful commands
+
+```bash
+# restore dependencies
+dotnet restore src/ConexaoSolidaria.slnx
+
+# build solution
+dotnet build src/ConexaoSolidaria.slnx
+
+# run tests
+dotnet test src/ConexaoSolidaria.Tests
+
+# start RabbitMQ
+docker compose -f src/docker-compose.yml up -d
+
+# run API
+dotnet run --project src/ConexaoSolidaria.API
+```
+
+## Notes
+
+- Keep secrets out of source control. Use environment variables, User Secrets, or Kubernetes secrets.
+- Start RabbitMQ before starting the API.
+- Do not modify event contracts without checking compatibility with the worker repository.
+- The worker is not included in this solution and is maintained in a separate repository.
